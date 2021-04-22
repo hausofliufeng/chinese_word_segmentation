@@ -20,7 +20,7 @@ def topN(word_list,N):
         N : top N longest you want to see
     
     returns:
-        
+        list : top N longest words with length
     """
     word_list=list(word_list)
     word_list.sort(key=lambda i:len(i),reverse=True)
