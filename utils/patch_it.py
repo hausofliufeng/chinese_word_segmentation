@@ -1,6 +1,7 @@
 import re
 import sys
 import numpy as np
+from tqdm import tqdm
 
 from sentence2crf import tagGenerate,sentenceTag
 from crf2sentence import sentenceParse
@@ -13,7 +14,24 @@ regRules=[
     re.compile(r'[一二三四五六七八九零〇○0０123456789]{4}年?'),
     re.compile(r'[一二三四五六七八九十0123456789]{1,2}月'),
     re.compile(r'[一二三四五六七八九十0123456789]{1,3}日'),
-    re.compile(r'[0123456789]{1,}[只个把条]{1}'),
+    # re.compile(r'[0123456789]{1,}[只个把条]{1}'),
+    # re.compile(r'远东豹'),
+    # re.compile(r'夏老汉'),
+    # re.compile(r'宋双亲王'),
+    # re.compile(r'夏世清'),
+    # re.compile(r'改革开放'),
+    # re.compile(r'电子邮件'),
+    # re.compile(r'邓小平'),
+    # re.compile(r'梅西大学'),
+    # re.compile(r'农业观光园'),
+    # re.compile(r'金正日'),
+    # re.compile(r'龙头企业'),
+    # re.compile(r'傅全有'),
+    # re.compile(r'江泽民'),
+    # re.compile(r'明治维新'),
+    # re.compile(r'党委书记'),
+    # re.compile(r'中华世纪坛'),
+    # re.compile(r'人大常委会'),
 ]
 
 
@@ -123,7 +141,7 @@ if __name__ == '__main__':
 
     data=fread(path_to_src)
     result=[]
-    for d in data:
+    for d in tqdm(data):
         result.append(patch(d,regRules)+"\n")
 
     fwrite(path_to_des,result)

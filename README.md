@@ -42,6 +42,8 @@ max_word_len=17 # 手动指定最长单词
 
 - 训练
 
+  使用命令开始训练，可选参数见[4, 5]，训练完成后会得到一个模型文件。
+  
   ```bash
   crf_learn template_file train_file output_model
   ```
@@ -95,17 +97,18 @@ perl scripts/score 词表 标准答案 分词预测>score.txt
 
 - 运用crf模型对验证集做出预测，对比预测结果和答案，观察分词效果不好的地方，提出相应解决方案，之后在测试集上进行评测。（以template_0生成的crf模型为基准）
 
-  | 问题                          | 解决方法                                               | R      | P      | F1     | OOVR   | IVR    |
-  | ----------------------------- | ------------------------------------------------------ | ------ | ------ | ------ | ------ | ------ |
-  | <span style="">crf基准</span> | /                                                      | 0.924  | 0.937  | 0.930  | 0.595  | 0.944  |
-  | 部分四字成语没有正确分词      | 增大单词窗口，最多考虑3个额外的词，见template_1        | -0.002 | -0.003 | -0.002 | -0.002 | -0.002 |
-  | 部分数字、日期切分错误        | 定义正则规则，在分词结果上强制切分日期、年份等特殊格式 | +0.004 | +0.003 | +0.004 | +0.059 | -      |
-  |                               |                                                        |        |        |        |        |        |
-
+  | 问题                          | 解决方法                                                | R      | P      | F1     | OOVR   | IVR   |
+  | ----------------------------- | ------------------------------------------------------- | ------ | ------ | ------ | ------ | ----- |
+  | <span style="">crf基准</span> | /                                                       | 0.924  | 0.937  | 0.930  | 0.595  | 0.944 |
+  | 部分数字、日期切分错误        | 定义正则规则，在分词结果上强制切分日期、年份等特殊格式* | +0.004 | +0.003 | +0.004 | +0.059 | -     |
   
+  *分词结果修正代码见`utils/patch_it.py`，凡是`regRules`能匹配到的词语，都会被脚本强制分词。运行方法：
+  
+  ```bash
+  python utils/patch_it.py path_to_src path_to_des
+  ```
 
-
-## 4 踩过的坑
+## 4 PS
 
 - 用perl命令进行打分前，记得核对下`答案.txt`和`预测值.txt`的句子总数是否相同，如果中间少预测一个句子，就会导致对不上，严重影响打分！
 
@@ -115,5 +118,8 @@ perl scripts/score 词表 标准答案 分词预测>score.txt
 
 [2] 利用crf++进行实体识别. https://zhuanlan.zhihu.com/p/27955621
 
-[3] CRF++: Yet Another CRF toolkit. https://taku910.github.io/crfpp/#todo
+[3] CRF++: Yet Another CRF toolkit. https://taku910.github.io/crfpp/
 
+[4] CRF++的使用和模板理解. https://blog.csdn.net/qq_39023569/article/details/88972234
+
+[5] CRF++模型格式说明. http://www.hankcs.com/nlp/the-crf-model-format-description.html
